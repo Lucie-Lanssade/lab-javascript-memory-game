@@ -22,7 +22,7 @@ const cards = [
   { name: 'spiderman', img: 'spiderman.jpg' },
   { name: 'superman', img: 'superman.jpg' },
   { name: 'the avengers', img: 'the-avengers.jpg' },
-  { name: 'thor', img: 'thor.jpg' }
+  { name: 'thor', img: 'thor.jpg' },
 ];
 
 const memoryGame = new MemoryGame(cards);
@@ -44,7 +44,37 @@ window.addEventListener('load', (event) => {
   // Bind the click event of each element to a function
   document.querySelectorAll('.card').forEach((card) => {
     card.addEventListener('click', () => {
+      if (memoryGame.pickedCards.length === 2) {
+        return;
+      }
+      memoryGame.pickedCards.push(card);
+
+      card.classList.toggle('turned');
+
+      memoryGame.checkIfFinished();
+
+      if (memoryGame.pickedCards.length === 2) {
+        const card1 = memoryGame.pickedCards[0];
+        const card2 = memoryGame.pickedCards[1];
+
+        console.log(card1.dataset.cardName);
+        memoryGame.pairsClicked++;
+
+        if (
+          memoryGame.checkIfPair(card1.dataset.cardName, card2.dataset.cardName)
+        ) {
+          console.log('win');
+        } else {
+          setTimeout(() => {
+            card1.classList.remove('turned');
+            card2.classList.remove('turned');
+            memoryGame.pickedCards = [];
+          }, 1000);
+        }
+      }
+
       // TODO: write some code here
+
       console.log(`Card clicked: ${card}`);
     });
   });
